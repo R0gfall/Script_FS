@@ -50,6 +50,14 @@ def main() -> None:
                 print("The file is not found!")
             else:
                 print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
+                answer = input()
+                if answer == "Y" or answer == 'y':
+                    os.chdir(out_directory(search_trip))
+                    os.remove(args.delete)
+                    print("The file was successfully deletes!")
+
+                elif answer == "N" or answer == "n":
+                    print(f'The file is not found in {args.directory}')
 
     if args.write:
         os.chdir(args.directory)
@@ -65,6 +73,16 @@ def main() -> None:
                 print("The file is not found!")
             else:
                 print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
+                answer = input()
+                if answer == "Y" or answer == 'y':
+                    os.chdir(out_directory(search_trip))
+                    with open(args.write, "a") as file:
+                        text = input("Write your text here: ")
+                        file.write(text)
+                    print("The text is already write!")
+
+                elif answer == "N" or answer == "n":
+                    print(f'The file is not found in {args.directory}')
 
     if args.read:
         os.chdir(args.directory)
@@ -81,7 +99,17 @@ def main() -> None:
             if search_trip == "Not found":
                 print("The file is not found!")
             else:
-                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!(Y/N)")
+                answer = input()
+                if answer == "Y" or answer == 'y':
+                    os.chdir(out_directory(search_trip))
+                    with open(args.read, "r") as file:
+                        lines = file.readlines()
+                        for line in lines:
+                            print(line.strip())
+                    print("\nThat is all!")
+                elif answer == "N" or answer == "n":
+                    print(f'The file is not found in {args.directory}')
 
     if args.transfer:
         os.chdir(args.transfer[1])
@@ -96,7 +124,14 @@ def main() -> None:
             if search_trip == "Not found":
                 print("The file is not found!")
             else:
-                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!(Y/N)")
+                answer = input()
+                if answer == "Y" or answer == 'y':
+                    os.chdir(out_directory(search_trip))
+                    shutil.copy(args.transfer[0], args.transfer[2])
+                    print("The file is copied to new directory!")
+                elif answer == "N" or answer == "n":
+                    print(f'The file is not found in {args.transfer[1]}')
 
     if args.rename:
         os.chdir(args.directory)
@@ -110,18 +145,32 @@ def main() -> None:
             if search_trip == "Not found":
                 print("The file is not found!")
             else:
-                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!(Y/N)")
+                answer = input()
+                if answer == "Y" or answer == 'y':
+                    os.chdir(out_directory(search_trip))
+                    os.rename(args.rename[0], args.rename[1])
+                    print("The file is rename!")
+                elif answer == "N" or answer == "n":
+                    print(f'The file is not found in {args.directory}')
 
 
 
 
 # file_name = 'Test_lab1.txt'
-# search = 'C:\\Users\\PCLe\\Desktop'
+# search = 'C:/Users/PCLe/Desktop'
+
+def out_directory(text: str) -> str:
+    text = text.replace('\\', '/').split("/")
+    text.pop()
+    text = "/".join(text)
+    return text
 
 def find_file(file_name: str, search_path: str) -> str:
     for root, dirs, files in os.walk(search_path):
         if file_name in files:
             return os.path.join(root, file_name)
+
 
     return "Not found"
 
