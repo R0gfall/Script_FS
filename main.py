@@ -101,9 +101,10 @@ def main() -> None:
     if args.rename:
         os.chdir(args.directory)
         try:
-            with open(args.transfer[0], "r") as file:
+            with open(args.rename[0], "r") as file:
                 pass
             os.rename(args.rename[0], args.rename[1])
+            print("The file is rename!")
         except FileNotFoundError:
             search_trip = find_file(args.rename[0], args.directory)
             if search_trip == "Not found":
