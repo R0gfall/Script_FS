@@ -45,7 +45,11 @@ def main() -> None:
             os.remove(args.delete)
             print("The file was successfully deletes!")
         else:
-            print("The file is not found!")
+            search_trip = find_file(args.delete, args.directory)
+            if search_trip == "Not found":
+                print("The file is not found!")
+            else:
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
 
     if args.write:
         os.chdir(args.directory)
@@ -56,7 +60,11 @@ def main() -> None:
             print("The text is already write!")
 
         except PermissionError:
-            print("The file is not found!")
+            search_trip = find_file(args.write, args.directory)
+            if search_trip == "Not found":
+                print("The file is not found!")
+            else:
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
 
     if args.read:
         os.chdir(args.directory)
@@ -69,7 +77,11 @@ def main() -> None:
             print("\nThat is all!")
 
         except FileNotFoundError:
-            print("The file is not found!")
+            search_trip = find_file(args.read, args.directory)
+            if search_trip == "Not found":
+                print("The file is not found!")
+            else:
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
 
     if args.transfer:
         os.chdir(args.transfer[1])
@@ -84,7 +96,22 @@ def main() -> None:
             if search_trip == "Not found":
                 print("The file is not found!")
             else:
-                print(f"File is found in a subdirectory {search_trip}, try with new arguments")
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
+
+    if args.rename:
+        os.chdir(args.directory)
+        try:
+            with open(args.transfer[0], "r") as file:
+                pass
+            os.rename(args.rename[0], args.rename[1])
+        except FileNotFoundError:
+            search_trip = find_file(args.rename[0], args.directory)
+            if search_trip == "Not found":
+                print("The file is not found!")
+            else:
+                print(f"File is found in a subdirectory {search_trip}, try with new arguments!")
+
+
 
 
 # file_name = 'Test_lab1.txt'
