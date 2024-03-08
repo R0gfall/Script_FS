@@ -1,6 +1,7 @@
 import os
 import argparse
 import shutil
+import winreg
 
 
 def main() -> None:
@@ -27,6 +28,17 @@ def main() -> None:
     parser.add_argument("-rn", "--rename", nargs=2, help="enter 2 arguments to raname file: "
                                                 "first argument: name file, "
                                                 "second argument: new name file")
+
+    parser.add_argument("-crk", "--create_key", type=str, help="enter your key to create")
+    parser.add_argument("-dk", "--delete_key", type=str, help="enter your key to delete")
+
+    parser.add_argument("-bch", "--bush_key", type=str, default="CU", choices=['CU', 'CR', 'LM', 'U', 'CC'],
+                        help="enter 1 of argument to needed bush (hotkey):"
+                             "CU = HKEY_CURRENT_USER; "
+                             "CR = HKEY_CLASSES_ROOT; "
+                             "LM = HKEY_LOCAL_MACHINE; "
+                             "U = HKEY_USERS; "
+                             "CC = HKEY_CURRENT_CONFIG " )
 
     args = parser.parse_args()
 
@@ -154,11 +166,39 @@ def main() -> None:
                 elif answer == "N" or answer == "n":
                     print(f'The file is not found in {args.directory}')
 
+    if args.create_key or args.delete_key:
+        try:
+            if args.bush_key == "CU":
+                hkey = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
+            elif args.bush_key == "CR":
+                input("press 'enter' to continue, HKEY_CLASSES_ROOT:")
+                hkey = winreg.ConnectRegistry(None, winreg.HKEY_CLASSES_ROOT)
+            elif args.bush_key == "LM":
+                input("press 'enter' to continue, HKEY_LOCAL_MACHINE:")
+                hkey = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+            elif args.bush_key == "U":
+                input("press 'enter' to continue, HKEY_USERS:")
+                hkey = winreg.ConnectRegistry(None, winreg.HKEY_USERS)
+            elif args.bush_key == "CC":
+                input("press 'enter' to continue, HKEY_CURRENT_CONFIG:")
+                hkey = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_CONFIG)
+            else:
+                print("ERROR not correct -bch / --bush_key argument!")
 
+            if args.create_key:
+                winreg.CreateKey(hkey, args.create_key)
+                print("Key is successful create!")
 
+            if args.delete_key:
+                winreg.DeleteKey(hkey, args.delete_key)
+                print("Key is successful delete!")
 
-# file_name = 'Test_lab1.txt'
-# search = 'C:/Users/PCLe/Desktop'
+        except PermissionError:
+            print(f"Not permission to create or delete key in {args.bush_key} ")
+
+        finally:
+            winreg.CloseKey(hkey)
+
 
 def out_directory(text: str) -> str:
     text = text.replace('\\', '/').split("/")
@@ -166,11 +206,11 @@ def out_directory(text: str) -> str:
     text = "/".join(text)
     return text
 
+
 def find_file(file_name: str, search_path: str) -> str:
     for root, dirs, files in os.walk(search_path):
         if file_name in files:
             return os.path.join(root, file_name)
-
 
     return "Not found"
 
@@ -179,11 +219,4 @@ if __name__ == "__main__":
     main()
 
 
-
-
-# print(find_file(args.create, args.directory))
-# print(find_file(file_name, search_path=search))
-
-# print(args)
-# print(args.create)
 
