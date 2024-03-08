@@ -33,10 +33,11 @@ def main() -> None:
 
     parser.add_argument("-crk", "--create_key", type=str, help="enter your key to create")
     parser.add_argument("-dk", "--delete_key", type=str, help="enter your key to delete")
-    parser.add_argument("-wnk", "--write_keyvalue", nargs=3, help="enter 3 arguments to write value in key: "
+    parser.add_argument("-wnk", "--write_keyvalue", nargs=4, help="enter 4 arguments to write value in key: "
                                                                 "first: name key; "
-                                                                "second: value name; "
-                                                                "third: new value; ")
+                                                                "second: value type; "
+                                                                "third: value name; "
+                                                                "fourth: new value data")
 
     parser.add_argument("-bch", "--bush_key", type=str, default="CU", choices=['CU', 'CR', 'LM', 'U', 'CC'],
                         help="enter 1 of argument to needed bush (hotkey):"
@@ -207,14 +208,41 @@ def main() -> None:
                     print("Incorrect second argument!")
 
                 else:
-                    pass
-
+                    value_type = ret_value_type(args.write_keyvalue[1])
+                    with winreg.OpenKey(hkey, args.write_keyvalue[0], 0, winreg.KEY_SET_VALUE) as key:
+                        winreg.SetValueEx(key, args.write_keyvalue[2], 0, value_type, args.write_keyvalue[3])
+                    print("Value key successful change!")
 
         except PermissionError:
-            print(f"Not permission to create or delete key in {args.bush_key} ")
+            print(f"Not permission to create or delete or change value key in {args.bush_key} ")
 
         finally:
             winreg.CloseKey(hkey)
+
+
+def ret_value_type(value_name):
+    if value_name == "REG_BINARY":
+        return winreg.REG_BINARY
+    elif value_name == "REG_DWORD":
+        return winreg.REG_DWORD
+    elif value_name == "REG_EXPAND_SZ":
+        return winreg.REG_EXPAND_SZ
+    elif value_name == "REG_MULTI_SZ":
+        return winreg.REG_MULTI_SZ
+    elif value_name == "REG_SZ":
+        return winreg.REG_SZ
+    elif value_name == "REG_RESOURCE_LIST":
+        return winreg.REG_RESOURCE_LIST
+    elif value_name == "REG_RESOURCE_REQUIREMENTS_LIST":
+        return winreg.REG_RESOURCE_REQUIREMENTS_LIST
+    elif value_name == "REG_FULL_RESOURCE_DESCRIPTOR":
+        return winreg.REG_FULL_RESOURCE_DESCRIPTOR
+    elif value_name == "REG_NONE":
+        return winreg.REG_NONE
+    elif value_name == "REG_LINK":
+        return winreg.REG_LINK
+    elif value_name == "REG_QWORD":
+        return winreg.REG_QWORD
 
 
 def out_directory(text: str) -> str:
