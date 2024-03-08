@@ -15,12 +15,14 @@ def main() -> None:
                                      epilog="You can use arguments: -c / --create; -d / --delete; "
                                             "-w / --write; -r / --read; with additional argument -d / --directory "
                                      )
+
     parser.add_argument("-c", "--create", type=str, help="enter file name to create")
     parser.add_argument("-d", "--delete", type=str, help="enter file name to delete")
     parser.add_argument("-w", "--write", type=str, help="enter file name to write")
     parser.add_argument("-r", "--read", type=str, help="enter file name to read")
     parser.add_argument("-dir", "--directory", type=str, default="C:\\",
                         help="enter directory")
+
     parser.add_argument("-t", "--transfer", nargs=3, help="enter 3 arguments to transfer file: "
                                                           "first: name file, "
                                                           "second: old directory, "
@@ -31,6 +33,10 @@ def main() -> None:
 
     parser.add_argument("-crk", "--create_key", type=str, help="enter your key to create")
     parser.add_argument("-dk", "--delete_key", type=str, help="enter your key to delete")
+    parser.add_argument("-wnk", "--write_keyvalue", nargs=3, help="enter 3 arguments to write value in key: "
+                                                                "first: name key; "
+                                                                "second: value name; "
+                                                                "third: new value; ")
 
     parser.add_argument("-bch", "--bush_key", type=str, default="CU", choices=['CU', 'CR', 'LM', 'U', 'CC'],
                         help="enter 1 of argument to needed bush (hotkey):"
@@ -166,7 +172,7 @@ def main() -> None:
                 elif answer == "N" or answer == "n":
                     print(f'The file is not found in {args.directory}')
 
-    if args.create_key or args.delete_key:
+    if args.create_key or args.delete_key or args.write_keyvalue:
         try:
             if args.bush_key == "CU":
                 hkey = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
@@ -192,6 +198,17 @@ def main() -> None:
             if args.delete_key:
                 winreg.DeleteKey(hkey, args.delete_key)
                 print("Key is successful delete!")
+
+            if args.write_keyvalue:
+                type_data = ["REG_BINARY", "REG_DWORD", "REG_EXPAND_SZ", "REG_MULTI_SZ", "REG_SZ", "REG_RESOURCE_LIST",
+                             "REG_RESOURCE_REQUIREMENTS_LIST", "REG_FULL_RESOURCE_DESCRIPTOR", "REG_NONE", "REG_LINK",
+                             "REG_QWORD"]
+                if args.write_keyvalue[1] not in type_data:
+                    print("Incorrect second argument!")
+
+                else:
+                    pass
+
 
         except PermissionError:
             print(f"Not permission to create or delete key in {args.bush_key} ")
