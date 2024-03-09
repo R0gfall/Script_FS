@@ -28,16 +28,16 @@ def main() -> None:
                                                           "second: old directory, "
                                                           "third: new directory")
     parser.add_argument("-rn", "--rename", nargs=2, help="enter 2 arguments to raname file: "
-                                                "first argument: name file, "
-                                                "second argument: new name file")
+                                                         "first argument: name file, "
+                                                         "second argument: new name file")
 
     parser.add_argument("-crk", "--create_key", type=str, help="enter your key to create")
     parser.add_argument("-dk", "--delete_key", type=str, help="enter your key to delete")
     parser.add_argument("-wnk", "--write_keyvalue", nargs=4, help="enter 4 arguments to write value in key: "
-                                                                "first: name key; "
-                                                                "second: value type; "
-                                                                "third: value name; "
-                                                                "fourth: new value data")
+                                                                  "first: name key; "
+                                                                  "second: value type; "
+                                                                  "third: value name; "
+                                                                  "fourth: new value data")
 
     parser.add_argument("-bch", "--bush_key", type=str, default="CU", choices=['CU', 'CR', 'LM', 'U', 'CC'],
                         help="enter 1 of argument to needed bush (hotkey):"
@@ -45,7 +45,7 @@ def main() -> None:
                              "CR = HKEY_CLASSES_ROOT; "
                              "LM = HKEY_LOCAL_MACHINE; "
                              "U = HKEY_USERS; "
-                             "CC = HKEY_CURRENT_CONFIG " )
+                             "CC = HKEY_CURRENT_CONFIG ")
 
     args = parser.parse_args()
 
@@ -262,6 +262,3 @@ def find_file(file_name: str, search_path: str) -> str:
 
 if __name__ == "__main__":
     main()
-
-
-
